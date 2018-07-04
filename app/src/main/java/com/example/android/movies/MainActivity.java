@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.movies.models.Movies;
 import com.example.android.movies.utilities.JsonUtils;
@@ -109,6 +110,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         if (menuItemId == R.id.sort_by_top_rated) {
             orderBy = getResources().getString(R.string.sort_by_top_rated);
             loadMovieData();
+            return true;
+        }
+        if (menuItemId == R.id.favorite_movies) {
+            Toast.makeText(MainActivity.this, "My favorite movies", Toast.LENGTH_SHORT).show();
             return true;
         }
         return super.onOptionsItemSelected(item);
