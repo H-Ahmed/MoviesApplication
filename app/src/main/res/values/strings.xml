@@ -17,4 +17,11 @@
     <string name="order_by_popular">Order by popular</string>
     <string name="order_by_top_rated">Order by top rated</string>
     <string name="error_message">Error</string>
+    <string name="favorite_movies">Favorite Movies</string>
+    <string name="run_time">Run Time</string>
+    <string name="make_favorite">make as favorite</string>
+    <string name="reviews">Reviews:</string>
+    <string name="trailers">Trailers:</string>
+    <string name="movie_detail">MovieDetail</string>
+    <string name="share_action">Share</string>
 </resources>

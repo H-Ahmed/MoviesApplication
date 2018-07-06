@@ -2,4 +2,34 @@
 <resources>
     <dimen name="progress_bar_dimension">48dp</dimen>
     <dimen name="linear_layout_margin">16dp</dimen>
+
+    <dimen name="trailer_rv_height">60dp</dimen>
+    <dimen name="detail_error_message_text_size">22sp</dimen>
+    <dimen name="detail_recycler_view_layout_margin">16dp</dimen>
+    <dimen name="part_title_layout_marginLeft">8dp</dimen>
+    <dimen name="part_title_layout_marginTop">16dp</dimen>
+    <dimen name="part_title_textSize">32sp</dimen>
+
+    <dimen name="overview_layout_marginLeft">8dp</dimen>
+    <dimen name="overview_layout_marginRight">8dp</dimen>
+    <dimen name="overview_layout_marginTop">16dp</dimen>
+    <dimen name="overview_textSize">16sp</dimen>
+
+    <dimen name="favorite_button_width">100dp</dimen>
+
+    <dimen name="vote_average_textSize">16sp</dimen>
+    <dimen name="run_time_textSize">20sp</dimen>
+    <dimen name="release_date_textSize">28sp</dimen>
+
+    <dimen name="poster_movie_layout_width">160dp</dimen>
+    <dimen name="poster_movie_layout_height">240dp</dimen>
+    <dimen name="poster_movie_layout_marginLeft">16dp</dimen>
+    <dimen name="poster_movie_layout_marginTop">8dp</dimen>
+
+    <dimen name="original_title_layout_height">150dp</dimen>
+    <dimen name="original_title_paddingLeft">16dp</dimen>
+    <dimen name="original_title_textSize">42sp</dimen>
+
+    <dimen name="ly_movie_data_layout_marginLeft">24dp</dimen>
+    <dimen name="ly_movie_data_layout_marginTop">16dp</dimen>
 </resources>

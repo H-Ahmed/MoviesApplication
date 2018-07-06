@@ -32,6 +32,22 @@ public final class NetworkUtils {
         return url;
     }
 
+    public static URL buildMovieDateUrl(String apiKeyValue, String movieId, String targetData) {
+        Uri buildUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
+                .appendPath(movieId)
+                .appendPath(targetData)
+                .appendQueryParameter(API, apiKeyValue)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(buildUri.toString());
+        } catch (MalformedURLException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+        return url;
+    }
+
     public static String getResponseFromHttpUrl(URL url) throws IOException {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()

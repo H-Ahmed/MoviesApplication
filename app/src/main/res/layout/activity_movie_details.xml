@@ -1,97 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:layout_height="wrap_content"
     tools:context=".MovieDetailsActivity">
 
-    <ImageView
-        android:id="@+id/iv_poster_movie"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:contentDescription="@string/movie_poster"
-        android:scaleType="fitXY" />
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_original_title"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/original_title_layout_height"
+            android:background="@color/original_title_background_color"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/original_title_paddingLeft"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/original_title_textSize"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Chappie" />
 
 
-    <ProgressBar
-        android:id="@+id/pb_movie"
-        android:layout_width="@dimen/progress_bar_dimension"
-        android:layout_height="@dimen/progress_bar_dimension"
-        android:layout_gravity="center"
-        android:visibility="gone" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
+        <ImageView
+            android:id="@+id/iv_poster_movie"
+            android:layout_width="@dimen/poster_movie_layout_width"
+            android:layout_height="@dimen/poster_movie_layout_height"
+            android:layout_marginLeft="@dimen/poster_movie_layout_marginLeft"
+            android:layout_marginTop="@dimen/poster_movie_layout_marginTop"
+            android:contentDescription="@string/movie_poster"
+            android:scaleType="fitXY"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_original_title"
+            tools:src="@drawable/dovetail" />
 
         <LinearLayout
             android:id="@+id/ly_movie_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/ly_movie_data_layout_marginLeft"
+            android:layout_marginTop="@dimen/ly_movie_data_layout_marginTop"
+            android:orientation="vertical"
+            app:layout_constraintLeft_toRightOf="@+id/iv_poster_movie"
+            app:layout_constraintTop_toTopOf="@+id/iv_poster_movie">
+
+            <TextView
+                android:id="@+id/tv_release_date"
+                style="@style/movie_details_text_view_value"
+                android:textSize="@dimen/release_date_textSize"
+                tools:text="2015" />
+
+            <TextView
+                android:id="@+id/tv_run_time"
+                style="@style/movie_details_text_view_value"
+                android:textSize="@dimen/run_time_textSize"
+                android:textStyle="bold|italic" />
+
+            <TextView
+                android:id="@+id/tv_vote_average"
+                style="@style/movie_details_text_view_value"
+                android:textSize="@dimen/vote_average_textSize" />
+
+            <Button
+                style="@style/movie_details_text_view_value"
+                android:layout_width="@dimen/favorite_button_width"
+                android:layout_height="wrap_content"
+                android:background="@color/favorite_button_color"
+                android:text="@string/make_favorite" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_overview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/linear_layout_margin"
-            android:orientation="vertical">
+            android:layout_marginLeft="@dimen/overview_layout_marginLeft"
+            android:layout_marginRight="@dimen/overview_layout_marginRight"
+            android:layout_marginTop="@dimen/overview_layout_marginTop"
+            android:textSize="@dimen/overview_textSize"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_poster_movie" />
 
-            <LinearLayout style="@style/movie_details_linear_layout">
 
-                <TextView
-                    style="@style/movie_details_text_view_label"
-                    android:text="@string/original_title" />
+        <View
+            android:id="@+id/divider_view"
+            style="@style/divider_view"
+            app:layout_constraintTop_toBottomOf="@+id/tv_overview" />
 
-                <TextView
-                    android:id="@+id/tv_original_title"
-                    style="@style/movie_details_text_view_value" />
+        <TextView
+            android:id="@+id/tv_trailer"
+            style="@style/detail_part_title"
+            android:text="@string/trailers"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider_view" />
 
-            </LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rv_movie_trailers"
+            style="detail_recycler_view"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_trailer" />
 
-            <LinearLayout style="@style/movie_details_linear_layout">
+        <TextView
+            android:id="@+id/tv_trailer_error_message"
+            style="@style/details_error_message"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_trailer" />
 
-                <TextView
-                    style="@style/movie_details_text_view_label"
-                    android:text="@string/overview" />
+        <TextView
+            android:id="@+id/tv_reviews"
+            style="@style/detail_part_title"
+            android:text="@string/reviews"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_movie_trailers" />
 
-                <TextView
-                    android:id="@+id/tv_overview"
-                    style="@style/movie_details_text_view_value" />
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rv_movie_reviews"
+            style="detail_recycler_view"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_reviews" />
 
-            </LinearLayout>
+        <TextView
+            android:id="@+id/tv_review_error_message"
+            style="@style/details_error_message"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_reviews" />
 
-            <LinearLayout style="@style/movie_details_linear_layout">
 
-                <TextView
-                    style="@style/movie_details_text_view_label"
-                    android:text="@string/vote_average" />
+        <ProgressBar
+            android:id="@+id/pb_movie"
+            style="@style/progress_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/tv_vote_average"
-                    style="@style/movie_details_text_view_value" />
+        <TextView
+            android:id="@+id/detail_error_message"
+            style="@style/details_error_message"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            </LinearLayout>
-
-            <LinearLayout style="@style/movie_details_linear_layout">
-
-                <TextView
-                    style="@style/movie_details_text_view_label"
-                    android:text="@string/release_date" />
-
-                <TextView
-                    android:id="@+id/tv_release_date"
-                    style="@style/movie_details_text_view_value" />
-
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:id="@+id/detail_error_message"
-        android:text="@string/no_data"
-        android:visibility="gone"
-        android:gravity="center"
-        android:textStyle="bold"/>
-
-</LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>

@@ -14,6 +14,8 @@ public class Movie {
     private String mVoteAverage;
     @SerializedName("release_date")
     private String mReleaseDate;
+    @SerializedName("runtime")
+    private int mRunTime;
 
     public String getOriginalTitle() {
         return mOriginalTitle;
@@ -32,19 +34,26 @@ public class Movie {
     }
 
     public String getReleaseDate() {
-        return mReleaseDate;
+        String year = mReleaseDate.substring(0,4);
+        return year;
+    }
+
+    public int getRunTime() {
+        return mRunTime;
     }
 
     public Movie(String originalTitle
             , String posterPath
             , String overview
             , String voteAverage
-            , String releaseDate) {
+            , String releaseDate
+            , int runTime) {
         mOriginalTitle = originalTitle;
         mPosterPath = posterPath;
         mOverview = overview;
         mVoteAverage = voteAverage;
         mReleaseDate = releaseDate;
+        mRunTime = runTime;
     }
 
 

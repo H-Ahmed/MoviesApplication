@@ -31,7 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler
-        , LoaderManager.LoaderCallbacks<Movies[]>{
+        , LoaderManager.LoaderCallbacks<Movies[]> {
 
     @BindView(R.id.pb_movies)
     ProgressBar mMoviesProgressBar;
@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     private MoviesAdapter mAdapter;
 
     private SharedPreferences orderByPreferences;
-
-
 
 
     @Override
@@ -100,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         startActivity(intent);
     }
 
-    private void editOrderByPreferences (String prefValue){
+    private void editOrderByPreferences(String prefValue) {
         SharedPreferences.Editor editor = orderByPreferences.edit();
         editor.putString(MOVIES_ORDER_BY_KEY, prefValue);
         editor.commit();
@@ -114,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
         LoaderManager loaderManager = getSupportLoaderManager();
         Loader<Movies[]> moviesLoader = loaderManager.getLoader(MOVIES_LOADER_ID);
-        if (moviesLoader == null){
+        if (moviesLoader == null) {
             loaderManager.initLoader(MOVIES_LOADER_ID, moviesBundle, this);
         } else {
             loaderManager.restartLoader(MOVIES_LOADER_ID, moviesBundle, this);
@@ -173,9 +171,9 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                     return;
                 }
                 mMoviesProgressBar.setVisibility(View.VISIBLE);
-                if (mMoviesData != null){
+                if (mMoviesData != null) {
                     deliverResult(mMoviesData);
-                }else {
+                } else {
                     forceLoad();
                 }
             }
@@ -184,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
             @Override
             public Movies[] loadInBackground() {
                 String orderValue = args.getString(MOVIES_ORDER_BY_KEY);
-                if (orderValue == null || TextUtils.isEmpty(orderValue)){
+                if (orderValue == null || TextUtils.isEmpty(orderValue)) {
                     return null;
                 }
                 URL moviesRequestURL = NetworkUtils.buildUrl(API_KEY_VALUE, orderValue);
