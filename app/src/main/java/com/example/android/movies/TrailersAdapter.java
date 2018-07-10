@@ -7,19 +7,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.movies.models.Trailer;
 
 public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.TrailersAdapterViewHolder> {
 
-    private Context mContext;
+
     private Trailer[] mTrailerData;
 
     private final TrailersAdapterOnClickHandler mClickHandler;
 
-    public TrailersAdapter(Context context, TrailersAdapterOnClickHandler clickHandler) {
-        mContext = context;
+    public TrailersAdapter(TrailersAdapterOnClickHandler clickHandler) {
         mClickHandler = clickHandler;
     }
 

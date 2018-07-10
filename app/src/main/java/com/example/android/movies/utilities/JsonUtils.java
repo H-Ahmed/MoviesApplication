@@ -38,8 +38,7 @@ public final class JsonUtils {
 
     public static Movie parseMovieDataFromJson(String jsonData) {
         Gson gson = new Gson();
-        Movie movie = gson.fromJson(jsonData, Movie.class);
-        return movie;
+        return gson.fromJson(jsonData, Movie.class);
     }
 
     public static Trailer[] parseTrailerMovieDataFromJson(String jsonData) throws JSONException {

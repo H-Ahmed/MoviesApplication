@@ -34,8 +34,7 @@ public class Movie {
     }
 
     public String getReleaseDate() {
-        String year = mReleaseDate.substring(0,4);
-        return year;
+        return mReleaseDate.substring(0,4);
     }
 
     public int getRunTime() {

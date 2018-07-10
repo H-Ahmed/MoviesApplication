@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         SharedPreferences.Editor editor = orderByPreferences.edit();
         editor.putString(MOVIES_ORDER_BY_KEY, prefValue);
         editor.commit();
-        Log.d(" Preferences To me", orderByPreferences.getString(MOVIES_ORDER_BY_KEY, "Nooooo"));
     }
 
     private void loadMovieData() {

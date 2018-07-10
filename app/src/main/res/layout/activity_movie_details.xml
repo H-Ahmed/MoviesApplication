@@ -21,8 +21,7 @@
             android:textSize="@dimen/original_title_textSize"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Chappie" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <ImageView
@@ -34,8 +33,7 @@
             android:contentDescription="@string/movie_poster"
             android:scaleType="fitXY"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_original_title"
-            tools:src="@drawable/dovetail" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_original_title"/>
 
         <LinearLayout
             android:id="@+id/ly_movie_data"
@@ -50,8 +48,7 @@
             <TextView
                 android:id="@+id/tv_release_date"
                 style="@style/movie_details_text_view_value"
-                android:textSize="@dimen/release_date_textSize"
-                tools:text="2015" />
+                android:textSize="@dimen/release_date_textSize" />
 
             <TextView
                 android:id="@+id/tv_run_time"

@@ -116,8 +116,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
                         return null;
                     }
                 }
-
-                ;
             };
         }
 
@@ -275,16 +273,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
         LinearLayoutManager trailerLayoutManager = new LinearLayoutManager(this);
         mTrailersRecyclerView.setHasFixedSize(true);
         mTrailersRecyclerView.setLayoutManager(trailerLayoutManager);
-        mTrailerAdapter = new TrailersAdapter(this, this);
+        mTrailerAdapter = new TrailersAdapter(this);
         mTrailersRecyclerView.setAdapter(mTrailerAdapter);
 
-        Bundle reviewrBundle = new Bundle();
-        reviewrBundle.putString(MOVIE_ID, movieId);
+        Bundle reviewBundle = new Bundle();
+        reviewBundle.putString(MOVIE_ID, movieId);
         Loader<Review> reviewLoader = loaderManager.getLoader(REVIEW_LOADER_ID);
         if (reviewLoader == null) {
-            loaderManager.initLoader(REVIEW_LOADER_ID, reviewrBundle, reviewLoaderCallbacks);
+            loaderManager.initLoader(REVIEW_LOADER_ID, reviewBundle, reviewLoaderCallbacks);
         } else {
-            loaderManager.restartLoader(REVIEW_LOADER_ID, reviewrBundle, reviewLoaderCallbacks);
+            loaderManager.restartLoader(REVIEW_LOADER_ID, reviewBundle, reviewLoaderCallbacks);
         }
         LinearLayoutManager reviewLayoutManager = new LinearLayoutManager(this);
         mReviewsRecyclerView.setHasFixedSize(true);
@@ -328,7 +326,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
         } catch (ActivityNotFoundException e) {
             if (webIntent.resolveActivity(getPackageManager()) != null) {
                 this.startActivity(webIntent);
-            }else{
+            } else {
                 Log.e(TAG, "onClick: ", e);
             }
         }
@@ -343,7 +341,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.share_action){
+        if (itemId == R.id.share_action) {
             String mimeType = "text/plain";
             String title = "Share Trailer Movie Video";
             String videoUrl = "http://www.youtube.com/watch?v=" + firstVideoKey;
