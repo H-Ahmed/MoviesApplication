@@ -396,11 +396,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
         mOriginalTitle = movieData.getOriginalTitle();
         mOverviewTextView.setText(movieData.getOverview());
         mOverview = movieData.getOverview();
-        mVoteAverageTextView.setText(movieData.getVoteAverage() + " / 10");
+        mVoteAverageTextView.setText(movieData.getVoteAverage() + " " + getString(R.string.max_rate_value));
         mVoteAverage = movieData.getVoteAverage();
         mReleaseDateTextView.setText(movieData.getReleaseDate().substring(0, 4));
         mReleaseDate = movieData.getReleaseDate();
-        mRunTimeTextView.setText(String.valueOf(movieData.getRunTime()) + " min");
+        mRunTimeTextView.setText(String.valueOf(movieData.getRunTime()) + " " + getString(R.string.unit_time));
         mRunTime = movieData.getRunTime();
     }
 

@@ -25,4 +25,6 @@
     <string name="trailers">Trailers:</string>
     <string name="movie_detail">MovieDetail</string>
     <string name="share_action">Share</string>
+    <string name="unit_time">min</string>
+    <string name="max_rate_value">/ 10</string>
 </resources>
