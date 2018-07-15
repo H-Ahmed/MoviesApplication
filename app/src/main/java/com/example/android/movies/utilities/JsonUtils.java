@@ -28,7 +28,7 @@ public final class JsonUtils {
         Movies[] parseMoviesData = new Movies[moviesArray.length()];
         for (int i = 0; i < moviesArray.length(); i++) {
             JSONObject movieData = moviesArray.getJSONObject(i);
-            String movieId = movieData.getString(MOVIE_ID);
+            int movieId = movieData.getInt(MOVIE_ID);
             String moviePosterPath = movieData.getString(POSTER_PATH);
             parseMoviesData[i] = new Movies(moviePosterPath, movieId);
         }

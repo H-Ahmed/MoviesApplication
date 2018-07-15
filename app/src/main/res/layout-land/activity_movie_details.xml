@@ -13,7 +13,7 @@
         <TextView
             android:id="@+id/tv_original_title"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/original_title_layout_height"
+            android:layout_height="@dimen/original_title_layout_height_land"
             android:background="@color/original_title_background_color"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/original_title_paddingLeft"
@@ -27,7 +27,7 @@
         <ImageView
             android:id="@+id/iv_poster_movie"
             android:layout_width="@dimen/poster_movie_layout_width"
-            android:layout_height="@dimen/poster_movie_layout_height"
+            android:layout_height="@dimen/poster_movie_layout_height_land"
             android:layout_marginLeft="@dimen/poster_movie_layout_marginLeft"
             android:layout_marginTop="@dimen/poster_movie_layout_marginTop"
             android:contentDescription="@string/movie_poster"
@@ -40,8 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/ly_movie_data_layout_marginLeft"
-            android:layout_marginTop="@dimen/ly_movie_data_layout_marginTop"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             app:layout_constraintLeft_toRightOf="@+id/iv_poster_movie"
             app:layout_constraintTop_toTopOf="@+id/iv_poster_movie">
 
@@ -64,30 +63,35 @@
             <Button
                 android:id="@+id/bt_favorite"
                 style="@style/movie_details_text_view_value"
-                android:layout_width="@dimen/favorite_width"
-                android:layout_height="@dimen/favorite_height"
-                android:background="@drawable/ic_favorite"
-                android:padding="8dp" />
-
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/ic_favorite" />
         </LinearLayout>
+
 
         <TextView
             android:id="@+id/tv_overview"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/overview_layout_marginLeft"
-            android:layout_marginRight="@dimen/overview_layout_marginRight"
-            android:layout_marginTop="@dimen/overview_layout_marginTop"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:maxLines="4"
+            android:maxWidth="500dp"
+            android:scrollbars="vertical"
             android:textSize="@dimen/overview_textSize"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_poster_movie" />
+            app:layout_constraintBottom_toBottomOf="@+id/iv_poster_movie"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/ly_movie_data"
+            app:layout_constraintTop_toBottomOf="@+id/ly_movie_data" />
 
 
         <View
             android:id="@+id/divider_view"
             style="@style/divider_view"
-            app:layout_constraintTop_toBottomOf="@+id/tv_overview" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_poster_movie" />
 
         <TextView
             android:id="@+id/tv_trailer"

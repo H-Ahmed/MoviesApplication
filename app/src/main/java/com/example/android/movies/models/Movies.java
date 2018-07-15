@@ -6,27 +6,25 @@ import android.os.Parcelable;
 public class Movies implements Parcelable {
 
     private String mPosterPath;
-    private String mId;
+    private int mId;
 
     public String getPosterPath() {
         return mPosterPath;
     }
 
-    public String getId() {
+    public int getId() {
         return mId;
     }
 
-
-    public Movies(String posterPath, String id) {
+    public Movies(String posterPath, int id) {
         mId = id;
         mPosterPath = posterPath;
-
     }
 
 
     protected Movies(Parcel in) {
         mPosterPath = in.readString();
-        mId = in.readString();
+        mId = in.readInt();
     }
 
     public static final Creator<Movies> CREATOR = new Creator<Movies>() {
@@ -49,6 +47,6 @@ public class Movies implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(mPosterPath);
-        parcel.writeString(mId);
+        parcel.writeInt(mId);
     }
 }

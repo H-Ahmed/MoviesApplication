@@ -1,7 +1,11 @@
 package com.example.android.movies;
 
+
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,13 +22,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.android.movies.models.Movie;
 import com.example.android.movies.models.Movies;
+import com.example.android.movies.utilities.AppDatabase;
 import com.example.android.movies.utilities.JsonUtils;
+import com.example.android.movies.utilities.MainViewModel;
 import com.example.android.movies.utilities.NetworkUtils;
 
 import java.net.URL;
+import java.util.List;
 
 
 import butterknife.BindView;
@@ -52,6 +59,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
     private SharedPreferences orderByPreferences;
 
+    private AppDatabase mDb;
+
+    private LoaderManager mLoaderManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +80,13 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
         API_KEY_VALUE = getResources().getString(R.string.api_key);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        mDb = AppDatabase.getInstance(getApplicationContext());
+        GridLayoutManager layoutManager;
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            layoutManager = new GridLayoutManager(this, 2);
+        } else {
+            layoutManager = new GridLayoutManager(this, 4);
+        }
         mMoviesRecyclerView.setHasFixedSize(true);
         mMoviesRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new MoviesAdapter(this, this);
@@ -83,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
             showErrorMessage();
             loadMovieData();
         }
+
     }
 
     @Override
@@ -92,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     }
 
     @Override
-    public void onClick(String movieId) {
+    public void onClick(int movieId) {
         Intent intent = new Intent(this, MovieDetailsActivity.class);
         intent.putExtra(Intent.EXTRA_TEXT, movieId);
         startActivity(intent);
@@ -109,12 +127,12 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         Bundle moviesBundle = new Bundle();
         moviesBundle.putString(MOVIES_ORDER_BY_KEY, orderBy);
 
-        LoaderManager loaderManager = getSupportLoaderManager();
-        Loader<Movies[]> moviesLoader = loaderManager.getLoader(MOVIES_LOADER_ID);
+        mLoaderManager = getSupportLoaderManager();
+        Loader<Movies[]> moviesLoader = mLoaderManager.getLoader(MOVIES_LOADER_ID);
         if (moviesLoader == null) {
-            loaderManager.initLoader(MOVIES_LOADER_ID, moviesBundle, this);
+            mLoaderManager.initLoader(MOVIES_LOADER_ID, moviesBundle, this);
         } else {
-            loaderManager.restartLoader(MOVIES_LOADER_ID, moviesBundle, this);
+            mLoaderManager.restartLoader(MOVIES_LOADER_ID, moviesBundle, this);
         }
     }
 
@@ -142,8 +160,26 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
             return true;
         }
         if (menuItemId == R.id.favorite_movies) {
+            mLoaderManager.destroyLoader(MOVIES_LOADER_ID);
+            mMoviesProgressBar.setVisibility(View.GONE);
             mMoviesData = null;
-            Toast.makeText(MainActivity.this, "My favorite movies", Toast.LENGTH_SHORT).show();
+            MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+            viewModel.getMovies().observe(this, new Observer<List<Movie>>() {
+                @Override
+                public void onChanged(@Nullable List<Movie> movies) {
+                    mMoviesData = new Movies[movies.size()];
+                    for (int i = 0; i < mMoviesData.length; i++) {
+                        mMoviesData[i] = new Movies(movies.get(i).getPosterPath(),
+                                movies.get(i).getId());
+                    }
+                    if (mMoviesData == null || mMoviesData.length == 0) {
+                        showErrorMessage();
+                    } else {
+                        showMoviesData();
+                        mAdapter.setMoviesData(mMoviesData);
+                    }
+                }
+            });
             return true;
         }
         return super.onOptionsItemSelected(item);

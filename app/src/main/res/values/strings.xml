@@ -19,7 +19,8 @@
     <string name="error_message">Error</string>
     <string name="favorite_movies">Favorite Movies</string>
     <string name="run_time">Run Time</string>
-    <string name="make_favorite">make as favorite</string>
+    <string name="make_favorite">Make as favorite</string>
+    <string name="remove_favorite">Remove from favorite</string>
     <string name="reviews">Reviews:</string>
     <string name="trailers">Trailers:</string>
     <string name="movie_detail">MovieDetail</string>

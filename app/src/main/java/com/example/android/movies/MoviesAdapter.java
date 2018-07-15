@@ -19,7 +19,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     private final MoviesAdapterOnClickHandler mClickHandler;
 
     public interface MoviesAdapterOnClickHandler {
-        void onClick(String movieId);
+        void onClick(int movieId);
     }
 
     public MoviesAdapter(Context context, MoviesAdapterOnClickHandler clickHandler) {

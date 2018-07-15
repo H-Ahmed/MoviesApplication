@@ -10,10 +10,10 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:contentDescription="@string/movie_poster"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
+            android:contentDescription="@string/movie_poster"
             android:src="@drawable/ic_baseline_play_arrow_24px" />
 
         <TextView
@@ -24,7 +24,6 @@
             android:gravity="center" />
     </LinearLayout>
 
-    <View
-        style="@style/divider_view" />
+    <View style="@style/divider_view" />
 
 </LinearLayout>
