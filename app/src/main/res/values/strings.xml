@@ -7,6 +7,7 @@
 
     <string name="sort_by_popular">popular</string>
     <string name="sort_by_top_rated">top_rated</string>
+    <string name="my_favorite">favorite</string>
     <string name="original_title">Original Title</string>
     <string name="overview">OverView</string>
     <string name="vote_average">Vote Average</string>

@@ -3,6 +3,7 @@ package com.example.android.movies;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -16,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,8 +39,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler
-        , LoaderManager.LoaderCallbacks<Movies[]> {
+public class MainActivity extends AppCompatActivity implements MoviesAdapter.MoviesAdapterOnClickHandler {
 
     @BindView(R.id.pb_movies)
     ProgressBar mMoviesProgressBar;
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
     private static final int MOVIES_LOADER_ID = 15;
     private static final String MOVIES_ORDER_BY_KEY = "order_by";
+    private static final String MOVIES_DATA_KEY = "moviesData";
+
     private String orderBy;
     private static String API_KEY_VALUE;
 
@@ -63,18 +66,86 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
     private LoaderManager mLoaderManager;
 
+    private LoaderManager.LoaderCallbacks<Movies[]> moviesLoaderCallbacks =
+            new LoaderManager.LoaderCallbacks<Movies[]>() {
+                @NonNull
+                @Override
+                public Loader<Movies[]> onCreateLoader(int id, @Nullable final Bundle args) {
+                    return new AsyncTaskLoader<Movies[]>(MainActivity.this) {
+                        @Override
+                        protected void onStartLoading() {
+                            if (args == null || !args.containsKey(MOVIES_ORDER_BY_KEY)) {
+                                showErrorMessage();
+                                return;
+                            }
+                            mMoviesProgressBar.setVisibility(View.VISIBLE);
+                            if (mMoviesData != null) {
+                                deliverResult(mMoviesData);
+                            } else {
+                                forceLoad();
+                            }
+                        }
+
+                        @Nullable
+                        @Override
+                        public Movies[] loadInBackground() {
+                            String orderValue = args.getString(MOVIES_ORDER_BY_KEY);
+                            if (orderValue == null || TextUtils.isEmpty(orderValue)) {
+                                return null;
+                            }
+                            URL moviesRequestURL = NetworkUtils.buildUrl(API_KEY_VALUE, orderValue);
+                            try {
+                                String jsonMoviesData = NetworkUtils.getResponseFromHttpUrl(moviesRequestURL);
+                                return JsonUtils.parseMoviesDataFromJson(jsonMoviesData);
+                            } catch (Exception e) {
+                                Log.e(TAG, e.getMessage(), e);
+                                return null;
+                            }
+                        }
+
+                        @Override
+                        public void deliverResult(@Nullable Movies[] data) {
+                            mMoviesData = data;
+                            super.deliverResult(data);
+                        }
+                    };
+                }
+
+                @Override
+                public void onLoadFinished(@NonNull Loader<Movies[]> loader, Movies[] moviesData) {
+                    mMoviesProgressBar.setVisibility(View.INVISIBLE);
+                    if (moviesData != null) {
+                        mMoviesData = moviesData;
+                        showMoviesData();
+                        mAdapter.setMoviesData(moviesData);
+                    } else {
+                        mMoviesData = null;
+                        showErrorMessage();
+                    }
+                }
+
+                @Override
+                public void onLoaderReset(@NonNull Loader<Movies[]> loader) {
+
+                }
+            };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null && savedInstanceState.containsKey(MOVIES_DATA_KEY)) {
+            mMoviesData = (Movies[]) savedInstanceState.getParcelableArray(MOVIES_DATA_KEY);
+        }
 
+        mLoaderManager = getSupportLoaderManager();
         orderByPreferences = getSharedPreferences(MOVIES_ORDER_BY_KEY, MODE_PRIVATE);
         orderBy = orderByPreferences.getString(MOVIES_ORDER_BY_KEY, null);
         if (orderBy == null) {
             editOrderByPreferences(getResources().getString(R.string.sort_by_popular));
             orderBy = orderByPreferences.getString(MOVIES_ORDER_BY_KEY, getResources().getString(R.string.sort_by_popular));
         }
-
+        Log.e(TAG, "onCreate: " + orderBy);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
@@ -82,11 +153,9 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
         mDb = AppDatabase.getInstance(getApplicationContext());
         GridLayoutManager layoutManager;
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            layoutManager = new GridLayoutManager(this, 2);
-        } else {
-            layoutManager = new GridLayoutManager(this, 4);
-        }
+        int noOfColumns = calculateNoOfColumns(this);
+        layoutManager = new GridLayoutManager(this, noOfColumns);
+
         mMoviesRecyclerView.setHasFixedSize(true);
         mMoviesRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new MoviesAdapter(this, this);
@@ -100,7 +169,12 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
             showErrorMessage();
             loadMovieData();
         }
+    }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArray(MOVIES_DATA_KEY, mMoviesData);
     }
 
     @Override
@@ -116,6 +190,17 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         startActivity(intent);
     }
 
+    public static int calculateNoOfColumns(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int scalingFactor = 200;
+        int noOfColumns = (int) (dpWidth / scalingFactor);
+        if (noOfColumns < 2) {
+            noOfColumns = 2;
+        }
+        return noOfColumns;
+    }
+
     private void editOrderByPreferences(String prefValue) {
         SharedPreferences.Editor editor = orderByPreferences.edit();
         editor.putString(MOVIES_ORDER_BY_KEY, prefValue);
@@ -124,15 +209,18 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
 
     private void loadMovieData() {
         showMoviesData();
-        Bundle moviesBundle = new Bundle();
-        moviesBundle.putString(MOVIES_ORDER_BY_KEY, orderBy);
+        if (!orderBy.equals(getResources().getString(R.string.my_favorite))) {
+            Bundle moviesBundle = new Bundle();
+            moviesBundle.putString(MOVIES_ORDER_BY_KEY, orderBy);
 
-        mLoaderManager = getSupportLoaderManager();
-        Loader<Movies[]> moviesLoader = mLoaderManager.getLoader(MOVIES_LOADER_ID);
-        if (moviesLoader == null) {
-            mLoaderManager.initLoader(MOVIES_LOADER_ID, moviesBundle, this);
+            Loader<Movies[]> moviesLoader = mLoaderManager.getLoader(MOVIES_LOADER_ID);
+            if (moviesLoader == null) {
+                mLoaderManager.initLoader(MOVIES_LOADER_ID, moviesBundle, moviesLoaderCallbacks);
+            } else {
+                mLoaderManager.restartLoader(MOVIES_LOADER_ID, moviesBundle, moviesLoaderCallbacks);
+            }
         } else {
-            mLoaderManager.restartLoader(MOVIES_LOADER_ID, moviesBundle, this);
+            loadMovieDataFromDatabase();
         }
     }
 
@@ -160,29 +248,36 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
             return true;
         }
         if (menuItemId == R.id.favorite_movies) {
+            editOrderByPreferences(getResources().getString(R.string.my_favorite));
+            orderBy = orderByPreferences.getString(MOVIES_ORDER_BY_KEY, getResources().getString(R.string.my_favorite));
             mLoaderManager.destroyLoader(MOVIES_LOADER_ID);
             mMoviesProgressBar.setVisibility(View.GONE);
             mMoviesData = null;
-            MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-            viewModel.getMovies().observe(this, new Observer<List<Movie>>() {
-                @Override
-                public void onChanged(@Nullable List<Movie> movies) {
-                    mMoviesData = new Movies[movies.size()];
-                    for (int i = 0; i < mMoviesData.length; i++) {
-                        mMoviesData[i] = new Movies(movies.get(i).getPosterPath(),
-                                movies.get(i).getId());
-                    }
-                    if (mMoviesData == null || mMoviesData.length == 0) {
-                        showErrorMessage();
-                    } else {
-                        showMoviesData();
-                        mAdapter.setMoviesData(mMoviesData);
-                    }
-                }
-            });
+            loadMovieDataFromDatabase();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void loadMovieDataFromDatabase() {
+        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel.getMovies().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(@Nullable List<Movie> movies) {
+                mMoviesData = new Movies[movies.size()];
+                for (int i = 0; i < mMoviesData.length; i++) {
+                    mMoviesData[i] = new Movies(movies.get(i).getPosterPath(),
+                            movies.get(i).getId());
+                }
+                if (mMoviesData == null || mMoviesData.length == 0) {
+                    showErrorMessage();
+                } else {
+                    showMoviesData();
+                    mAdapter.setMoviesData(mMoviesData);
+                }
+            }
+        });
+
     }
 
     private void showMoviesData() {
@@ -194,66 +289,4 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         mMoviesRecyclerView.setVisibility(View.INVISIBLE);
         mErrorMessageTextView.setVisibility(View.VISIBLE);
     }
-
-    @NonNull
-    @Override
-    public Loader<Movies[]> onCreateLoader(int id, @Nullable final Bundle args) {
-        return new AsyncTaskLoader<Movies[]>(this) {
-            @Override
-            protected void onStartLoading() {
-                if (args == null || !args.containsKey(MOVIES_ORDER_BY_KEY)) {
-                    showErrorMessage();
-                    return;
-                }
-                mMoviesProgressBar.setVisibility(View.VISIBLE);
-                if (mMoviesData != null) {
-                    deliverResult(mMoviesData);
-                } else {
-                    forceLoad();
-                }
-            }
-
-            @Nullable
-            @Override
-            public Movies[] loadInBackground() {
-                String orderValue = args.getString(MOVIES_ORDER_BY_KEY);
-                if (orderValue == null || TextUtils.isEmpty(orderValue)) {
-                    return null;
-                }
-                URL moviesRequestURL = NetworkUtils.buildUrl(API_KEY_VALUE, orderValue);
-                try {
-                    String jsonMoviesData = NetworkUtils.getResponseFromHttpUrl(moviesRequestURL);
-                    return JsonUtils.parseMoviesDataFromJson(jsonMoviesData);
-                } catch (Exception e) {
-                    Log.e(TAG, e.getMessage(), e);
-                    return null;
-                }
-            }
-
-            @Override
-            public void deliverResult(@Nullable Movies[] data) {
-                mMoviesData = data;
-                super.deliverResult(data);
-            }
-        };
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<Movies[]> loader, Movies[] moviesData) {
-        mMoviesProgressBar.setVisibility(View.INVISIBLE);
-        if (moviesData != null) {
-            mMoviesData = moviesData;
-            showMoviesData();
-            mAdapter.setMoviesData(moviesData);
-        } else {
-            mMoviesData = null;
-            showErrorMessage();
-        }
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<Movies[]> loader) {
-
-    }
-
 }

@@ -61,13 +61,15 @@
                 style="@style/movie_details_text_view_value"
                 android:textSize="@dimen/vote_average_textSize" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/bt_favorite"
-                style="@style/movie_details_text_view_value"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="@dimen/favorite_width"
                 android:layout_height="@dimen/favorite_height"
-                android:background="@drawable/ic_favorite"
-                android:padding="8dp" />
+                android:scaleType="centerCrop"
+                android:background="@color/favorite_background"
+                app:srcCompat="@drawable/ic_favorite_white"
+                 />
 
         </LinearLayout>
 

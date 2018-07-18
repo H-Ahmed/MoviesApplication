@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -72,7 +73,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
     @BindView(R.id.rv_movie_reviews)
     RecyclerView mReviewsRecyclerView;
     @BindView(R.id.bt_favorite)
-    Button mFavoriteButton;
+    ImageButton mFavoriteButton;
 
     private String mPosterPath;
     private String mOriginalTitle;
@@ -374,11 +375,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
     }
 
     private void unFavoriteButtonUi() {
-        mFavoriteButton.setBackgroundResource(R.drawable.ic_unfavorite);
+        mFavoriteButton.setImageResource(R.drawable.ic_favorite_white);
     }
 
     private void favoriteButtonUi() {
-        mFavoriteButton.setBackgroundResource(R.drawable.ic_favorite);
+        mFavoriteButton.setImageResource(R.drawable.ic_favorite_red);
     }
 
 

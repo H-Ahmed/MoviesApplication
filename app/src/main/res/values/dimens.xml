@@ -37,4 +37,6 @@
     <dimen name="ly_movie_data_layout_marginTop">16dp</dimen>
     <dimen name="favorite_width">48dp</dimen>
     <dimen name="favorite_height">48dp</dimen>
+    <dimen name="land_overview_margin">8dp</dimen>
+    <dimen name="land_overview_max_width">500dp</dimen>
 </resources>

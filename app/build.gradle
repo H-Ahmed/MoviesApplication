@@ -4,6 +4,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.example.android.movies"
+        vectorDrawables.useSupportLibrary = true
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 1

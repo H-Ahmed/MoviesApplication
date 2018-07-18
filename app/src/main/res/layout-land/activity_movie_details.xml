@@ -60,12 +60,15 @@
                 style="@style/movie_details_text_view_value"
                 android:textSize="@dimen/vote_average_textSize" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/bt_favorite"
-                style="@style/movie_details_text_view_value"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/ic_favorite" />
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="@dimen/favorite_width"
+                android:layout_height="@dimen/favorite_height"
+                android:scaleType="centerCrop"
+                android:background="@color/favorite_background"
+                app:srcCompat="@drawable/ic_favorite_white"
+                />
         </LinearLayout>
 
 
@@ -73,13 +76,13 @@
             android:id="@+id/tv_overview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginBottom="@dimen/land_overview_margin"
+            android:layout_marginEnd="@dimen/land_overview_margin"
+            android:layout_marginLeft="@dimen/land_overview_margin"
+            android:layout_marginRight="@dimen/land_overview_margin"
+            android:layout_marginTop="@dimen/land_overview_margin"
             android:maxLines="4"
-            android:maxWidth="500dp"
+            android:maxWidth="@dimen/land_overview_max_width"
             android:scrollbars="vertical"
             android:textSize="@dimen/overview_textSize"
             app:layout_constraintBottom_toBottomOf="@+id/iv_poster_movie"

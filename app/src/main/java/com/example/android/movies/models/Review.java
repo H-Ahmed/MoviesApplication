@@ -1,8 +1,11 @@
 package com.example.android.movies.models;
 
-public class Review {
+import com.google.gson.annotations.SerializedName;
 
+public class Review {
+    @SerializedName("author")
     private String mReviewAuthor;
+    @SerializedName("content")
     private String mReviewCommit;
 
     public String getReviewAuthor() {
