@@ -78,12 +78,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
 
     private static final String TAG = "MovieDetailsActivity";
 
-    private static String API_KEY_VALUE;
+    private static String API_KEY_VALUE = BuildConfig.ApiKey;
     private static final String MOVIE_ID = "movie_id";
 
     private static final int MOVIE_LOADER_ID = 52;
     private static final int TRAILER_LOADER_ID = 53;
     private static final int REVIEW_LOADER_ID = 54;
+
+    private static final String IMAGE_URL = "http://image.tmdb.org/t/p/w500//";
+    private static final String YOUTUBE_APP_URL = "vnd.youtube:";
+    private static final String YOUTUBE_URL = "http://www.youtube.com/watch?v=";
 
     private static final String TRAILER = "videos";
     private static final String REVIEWS = "reviews";
@@ -282,7 +286,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
         }
 
         loaderManager = getSupportLoaderManager();
-        API_KEY_VALUE = getResources().getString(R.string.api_key);
 
         mDb = AppDatabase.getInstance(getApplicationContext());
 
@@ -411,7 +414,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
     private void showMovieDetailData(Movie movieData) {
         mMovieProgressBar.setVisibility(View.GONE);
         mMovieDataLinearLayout.setVisibility(View.VISIBLE);
-        Picasso.get().load("http://image.tmdb.org/t/p/w500//" + movieData.getPosterPath()).into(mPosterMovieImageView);
+        Picasso.get().load(IMAGE_URL + movieData.getPosterPath())
+                .placeholder(R.mipmap.loading)
+                .error(R.mipmap.error)
+                .into(mPosterMovieImageView);
         mOriginalTitleTextView.setText(movieData.getOriginalTitle());
         mOverviewTextView.setText(movieData.getOverview());
         mVoteAverageTextView.setText(movieData.getVoteAverage() + " " + getString(R.string.max_rate_value));
@@ -430,8 +436,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
 
     @Override
     public void onClick(String trailerKey) {
-        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + trailerKey));
-        Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + trailerKey));
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(YOUTUBE_APP_URL + trailerKey));
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(YOUTUBE_URL + trailerKey));
         try {
             this.startActivity(appIntent);
         } catch (ActivityNotFoundException e) {
@@ -442,6 +448,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
             }
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

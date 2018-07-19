@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     private static final String MOVIES_DATA_KEY = "moviesData";
 
     private String orderBy;
-    private static String API_KEY_VALUE;
+    private static String API_KEY_VALUE = BuildConfig.ApiKey;
 
     private Movies[] mMoviesData;
     private MoviesAdapter mAdapter;
@@ -148,8 +148,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         }
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-        API_KEY_VALUE = getResources().getString(R.string.api_key);
 
         GridLayoutManager layoutManager;
         int noOfColumns = calculateNoOfColumns(this);

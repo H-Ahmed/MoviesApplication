@@ -49,28 +49,30 @@
             <TextView
                 android:id="@+id/tv_release_date"
                 style="@style/movie_details_text_view_value"
-                android:textSize="@dimen/release_date_textSize" />
+                android:textSize="@dimen/release_date_textSize"
+                tools:text="@string/release_date_value" />
 
             <TextView
                 android:id="@+id/tv_run_time"
                 style="@style/movie_details_text_view_value"
                 android:textSize="@dimen/run_time_textSize"
-                android:textStyle="bold|italic" />
+                android:textStyle="bold|italic"
+                tools:text="@string/run_time_value" />
 
             <TextView
                 android:id="@+id/tv_vote_average"
                 style="@style/movie_details_text_view_value"
-                android:textSize="@dimen/vote_average_textSize" />
+                android:textSize="@dimen/vote_average_textSize"
+                tools:text="@string/vote_average_value" />
 
             <ImageButton
-                android:contentDescription="@string/my_favorite"
                 android:id="@+id/bt_favorite"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="@dimen/favorite_width"
                 android:layout_height="@dimen/favorite_height"
-                android:scaleType="centerCrop"
                 android:background="@color/favorite_background"
-                 />
+                android:contentDescription="@string/my_favorite"
+                android:scaleType="centerCrop" />
 
         </LinearLayout>
 

@@ -13,6 +13,8 @@ import okhttp3.Response;
 
 public final class NetworkUtils {
 
+    private NetworkUtils() {}
+
     private static final String TAG = "NetworkUtils";
     private final static String MOVIES_BASE_URL = "https://api.themoviedb.org/3/movie";
     private final static String API = "api_key";

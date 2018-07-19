@@ -9,4 +9,7 @@
     <color name="divider_view_color">#979595</color>
 
     <color name="original_title_background_color">#009688</color>
+
+    <color name="error_color_background">#8A9DA6</color>
+    <color name="loading_color_background">#50A3A6</color>
 </resources>

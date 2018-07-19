@@ -17,6 +17,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     private Context mContext;
     private Movies[] mMoviesData;
 
+    private static final String IMAGE_URL = "http://image.tmdb.org/t/p/w185//";
+
     private final MoviesAdapterOnClickHandler mClickHandler;
 
     public interface MoviesAdapterOnClickHandler {
@@ -36,7 +38,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     public void onBindViewHolder(MoviesAdapterViewHolder holder, int position) {
         String posterPath = mMoviesData[position].getPosterPath();
-        Picasso.get().load("http://image.tmdb.org/t/p/w185//" + posterPath).into(holder.moviePosterImageView);
+        Picasso.get()
+                .load(IMAGE_URL + posterPath)
+                .placeholder(R.mipmap.loading)
+                .error(R.mipmap.error)
+                .into(holder.moviePosterImageView)
+        ;
     }
 
     @Override
