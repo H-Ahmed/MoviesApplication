@@ -1,4 +1,4 @@
-package com.example.android.movies.utilities;
+package com.example.android.movies.data.remote;
 
 import android.net.Uri;
 import android.util.Log;

@@ -1,4 +1,4 @@
-package com.example.android.movies.utilities;
+package com.example.android.movies.data.remote;
 
 
 import com.example.android.movies.models.Movie;
@@ -6,7 +6,6 @@ import com.example.android.movies.models.Movies;
 import com.example.android.movies.models.Review;
 import com.example.android.movies.models.Trailer;
 import com.google.gson.Gson;
-
 
 import org.json.JSONArray;
 import org.json.JSONException;

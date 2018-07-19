@@ -68,7 +68,6 @@
                 android:layout_height="@dimen/favorite_height"
                 android:scaleType="centerCrop"
                 android:background="@color/favorite_background"
-                app:srcCompat="@drawable/ic_favorite_white"
                  />
 
         </LinearLayout>

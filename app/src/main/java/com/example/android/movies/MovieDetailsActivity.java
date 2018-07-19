@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.movies.models.Movie;
+
 import com.example.android.movies.models.Review;
 import com.example.android.movies.models.Trailer;
 import com.example.android.movies.utilities.AppDatabase;
@@ -75,13 +76,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
     @BindView(R.id.bt_favorite)
     ImageButton mFavoriteButton;
 
-    private String mPosterPath;
-    private String mOriginalTitle;
-    private String mOverview;
-    private float mVoteAverage;
-    private String mReleaseDate;
-    private int mRunTime;
-
     private static final String TAG = "MovieDetailsActivity";
 
     private static String API_KEY_VALUE;
@@ -105,7 +99,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
 
     private AppDatabase mDb;
 
-    private boolean isDatabaseMember = false;
+    private boolean isDatabaseMember;
+
+    private static final String MOVIE_DATA = "movie";
+
+    private Movie mMovie;
 
 
     private LoaderManager.LoaderCallbacks<Movie> movieLoaderCallbacks
@@ -123,7 +121,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
                     }
                     mMovieProgressBar.setVisibility(View.VISIBLE);
                     mMovieDataLinearLayout.setVisibility(View.GONE);
-                    forceLoad();
+                    if (mMovie != null) {
+                        deliverResult(mMovie);
+                    } else {
+                        forceLoad();
+                    }
                 }
 
                 @Nullable
@@ -139,12 +141,19 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
                         return null;
                     }
                 }
+
+                @Override
+                public void deliverResult(@Nullable Movie data) {
+                    mMovie = data;
+                    super.deliverResult(data);
+                }
             };
         }
 
         @Override
         public void onLoadFinished(@NonNull Loader<Movie> loader, Movie movieData) {
             if (movieData != null) {
+                mMovie = movieData;
                 showMovieDetailData(movieData);
             } else {
                 showDetailErrorMessage();
@@ -261,7 +270,18 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
         ButterKnife.bind(this);
+        Log.e(TAG, "onCreate: 1 " + isDatabaseMember);
+        if (savedInstanceState != null && savedInstanceState.containsKey(MOVIE_DATA)) {
+            mMovie = (Movie) savedInstanceState.getParcelable(MOVIE_DATA);
+        }
 
+        if (isDatabaseMember) {
+            favoriteButtonUi();
+        } else {
+            unFavoriteButtonUi();
+        }
+
+        loaderManager = getSupportLoaderManager();
         API_KEY_VALUE = getResources().getString(R.string.api_key);
 
         mDb = AppDatabase.getInstance(getApplicationContext());
@@ -272,25 +292,25 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
         }
 
         if (intent.hasExtra(Intent.EXTRA_TEXT)) {
+            Log.e(TAG, "onCreate: 2 " + isDatabaseMember);
             movieId = intent.getIntExtra(Intent.EXTRA_TEXT, -1);
             if (movieId == -1) {
                 closeActivity();
             }
-            loaderManager = getSupportLoaderManager();
             LoadMovieViewModelFactory factory = new LoadMovieViewModelFactory(mDb, movieId);
             final LoadMovieViewModel viewModel =
                     ViewModelProviders.of(this, factory).get(LoadMovieViewModel.class);
             viewModel.getMovie().observe(this, new Observer<Movie>() {
                 @Override
                 public void onChanged(@Nullable Movie movie) {
-                    viewModel.getMovie().removeObserver(this);
                     if (movie != null) {
-                        favoriteButtonUi();
+                        mMovie = movie;
                         isDatabaseMember = true;
+                        favoriteButtonUi();
                         showMovieDetailData(movie);
                     } else {
-                        unFavoriteButtonUi();
                         isDatabaseMember = false;
+                        unFavoriteButtonUi();
                         Bundle movieBundle = new Bundle();
                         movieBundle.putInt(MOVIE_ID, movieId);
                         Loader<Movie> movieLoader = loaderManager.getLoader(MOVIE_LOADER_ID);
@@ -300,6 +320,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
                             loaderManager.restartLoader(MOVIE_LOADER_ID, movieBundle, movieLoaderCallbacks);
                         }
                     }
+                    Log.e(TAG, "onCreate: 3 " + isDatabaseMember);
                 }
             });
 
@@ -310,35 +331,28 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
         mFavoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Movie movie = new Movie(
-                        movieId,
-                        mOriginalTitle,
-                        mPosterPath,
-                        mOverview,
-                        mVoteAverage,
-                        mReleaseDate,
-                        mRunTime);
-
+                Log.e(TAG, "onCreate: 4 " + isDatabaseMember);
                 if (isDatabaseMember) {
+                    isDatabaseMember = false;
+                    unFavoriteButtonUi();
                     AppExecutors.getsInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
-                            mDb.movieDeo().deleteMovie(movie);
-                            isDatabaseMember = false;
-                            unFavoriteButtonUi();
+                            mDb.movieDeo().deleteMovie(mMovie);
                         }
                     });
                 } else {
+                    isDatabaseMember = true;
+                    favoriteButtonUi();
                     AppExecutors.getsInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
-                            mDb.movieDeo().insertMovie(movie);
-                            isDatabaseMember = true;
-                            favoriteButtonUi();
+                            mDb.movieDeo().insertMovie(mMovie);
                         }
                     });
 
                 }
+                Log.e(TAG, "onCreate: 5 " + isDatabaseMember);
             }
 
         });
@@ -374,8 +388,14 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(MOVIE_DATA, mMovie);
+    }
+
     private void unFavoriteButtonUi() {
-        mFavoriteButton.setImageResource(R.drawable.ic_favorite_white);
+        mFavoriteButton.setImageResource(R.drawable.ic_favorite_border);
     }
 
     private void favoriteButtonUi() {
@@ -392,17 +412,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
         mMovieProgressBar.setVisibility(View.GONE);
         mMovieDataLinearLayout.setVisibility(View.VISIBLE);
         Picasso.get().load("http://image.tmdb.org/t/p/w500//" + movieData.getPosterPath()).into(mPosterMovieImageView);
-        mPosterPath = movieData.getPosterPath();
         mOriginalTitleTextView.setText(movieData.getOriginalTitle());
-        mOriginalTitle = movieData.getOriginalTitle();
         mOverviewTextView.setText(movieData.getOverview());
-        mOverview = movieData.getOverview();
         mVoteAverageTextView.setText(movieData.getVoteAverage() + " " + getString(R.string.max_rate_value));
-        mVoteAverage = movieData.getVoteAverage();
         mReleaseDateTextView.setText(movieData.getReleaseDate().substring(0, 4));
-        mReleaseDate = movieData.getReleaseDate();
         mRunTimeTextView.setText(String.valueOf(movieData.getRunTime()) + " " + getString(R.string.unit_time));
-        mRunTime = movieData.getRunTime();
+
     }
 
     private void showDetailErrorMessage() {

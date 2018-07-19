@@ -27,11 +27,14 @@ import android.widget.TextView;
 
 import com.example.android.movies.models.Movie;
 import com.example.android.movies.models.Movies;
-import com.example.android.movies.utilities.AppDatabase;
+
 import com.example.android.movies.utilities.JsonUtils;
 import com.example.android.movies.utilities.MainViewModel;
 import com.example.android.movies.utilities.NetworkUtils;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
@@ -48,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     @BindView(R.id.tv_error_message)
     TextView mErrorMessageTextView;
 
+
     private static final String TAG = "MainActivity";
 
     private static final int MOVIES_LOADER_ID = 15;
@@ -61,8 +65,6 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
     private MoviesAdapter mAdapter;
 
     private SharedPreferences orderByPreferences;
-
-    private AppDatabase mDb;
 
     private LoaderManager mLoaderManager;
 
@@ -145,13 +147,11 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
             editOrderByPreferences(getResources().getString(R.string.sort_by_popular));
             orderBy = orderByPreferences.getString(MOVIES_ORDER_BY_KEY, getResources().getString(R.string.sort_by_popular));
         }
-        Log.e(TAG, "onCreate: " + orderBy);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
         API_KEY_VALUE = getResources().getString(R.string.api_key);
 
-        mDb = AppDatabase.getInstance(getApplicationContext());
         GridLayoutManager layoutManager;
         int noOfColumns = calculateNoOfColumns(this);
         layoutManager = new GridLayoutManager(this, noOfColumns);
@@ -264,16 +264,18 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
         viewModel.getMovies().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
-                mMoviesData = new Movies[movies.size()];
-                for (int i = 0; i < mMoviesData.length; i++) {
-                    mMoviesData[i] = new Movies(movies.get(i).getPosterPath(),
-                            movies.get(i).getId());
-                }
-                if (mMoviesData == null || mMoviesData.length == 0) {
-                    showErrorMessage();
-                } else {
-                    showMoviesData();
-                    mAdapter.setMoviesData(mMoviesData);
+                if (orderBy.equals(getResources().getString(R.string.my_favorite))) {
+                    mMoviesData = new Movies[movies.size()];
+                    for (int i = 0; i < mMoviesData.length; i++) {
+                        mMoviesData[i] = new Movies(movies.get(i).getPosterPath(),
+                                movies.get(i).getId());
+                    }
+                    if (mMoviesData == null || mMoviesData.length == 0) {
+                        showErrorMessage();
+                    } else {
+                        showMoviesData();
+                        mAdapter.setMoviesData(mMoviesData);
+                    }
                 }
             }
         });
