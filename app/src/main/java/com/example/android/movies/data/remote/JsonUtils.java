@@ -1,10 +1,10 @@
 package com.example.android.movies.data.remote;
 
 
-import com.example.android.movies.models.Movie;
-import com.example.android.movies.models.Movies;
-import com.example.android.movies.models.Review;
-import com.example.android.movies.models.Trailer;
+import com.example.android.movies.data.models.Movie;
+import com.example.android.movies.data.models.Movies;
+import com.example.android.movies.data.models.Review;
+import com.example.android.movies.data.models.Trailer;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -40,16 +40,15 @@ public final class JsonUtils {
         JSONObject trailersData = new JSONObject(jsonData);
         JSONArray trailerArray = trailersData.getJSONArray(RESULTS);
         Gson gson = new Gson();
-        Trailer[] parseTrailerData = gson.fromJson(trailerArray.toString(), Trailer[].class);
-        return parseTrailerData;
+        return gson.fromJson(trailerArray.toString(), Trailer[].class);
+
     }
 
     public static Review[] parseReviewMovieDataFromJson(String jsonData) throws JSONException {
         JSONObject reviewsData = new JSONObject(jsonData);
         JSONArray reviewArray = reviewsData.getJSONArray(RESULTS);
         Gson gson = new Gson();
-        Review[] parseReviewData = gson.fromJson(reviewArray.toString(), Review[].class);
-        return parseReviewData;
+        return gson.fromJson(reviewArray.toString(), Review[].class);
     }
 
 }

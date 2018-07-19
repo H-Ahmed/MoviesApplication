@@ -3,7 +3,7 @@ package com.example.android.movies.data.local;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 
-import com.example.android.movies.models.Movie;
+import com.example.android.movies.data.models.Movie;
 
 public class LoadMovieViewModel extends ViewModel {
 

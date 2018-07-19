@@ -5,7 +5,7 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
-import com.example.android.movies.models.Movie;
+import com.example.android.movies.data.models.Movie;
 
 import java.util.List;
 

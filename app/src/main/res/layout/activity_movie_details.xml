@@ -16,7 +16,8 @@
             android:layout_height="@dimen/original_title_layout_height"
             android:background="@color/original_title_background_color"
             android:gravity="center_vertical"
-            android:paddingLeft="@dimen/original_title_paddingLeft"
+            android:paddingLeft="@dimen/original_title_padding"
+            android:paddingRight="@dimen/original_title_padding"
             android:textColor="@android:color/white"
             android:textSize="@dimen/original_title_textSize"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -62,6 +63,7 @@
                 android:textSize="@dimen/vote_average_textSize" />
 
             <ImageButton
+                android:contentDescription="@string/my_favorite"
                 android:id="@+id/bt_favorite"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="@dimen/favorite_width"

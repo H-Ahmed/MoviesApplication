@@ -1,6 +1,5 @@
 package com.example.android.movies;
 
-
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.ActivityNotFoundException;
@@ -20,7 +19,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,16 +26,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.movies.models.Movie;
+import com.example.android.movies.data.models.Movie;
 
-import com.example.android.movies.models.Review;
-import com.example.android.movies.models.Trailer;
-import com.example.android.movies.utilities.AppDatabase;
-import com.example.android.movies.utilities.AppExecutors;
-import com.example.android.movies.utilities.JsonUtils;
-import com.example.android.movies.utilities.LoadMovieViewModel;
-import com.example.android.movies.utilities.LoadMovieViewModelFactory;
-import com.example.android.movies.utilities.NetworkUtils;
+import com.example.android.movies.data.models.Review;
+import com.example.android.movies.data.models.Trailer;
+import com.example.android.movies.data.local.AppDatabase;
+import com.example.android.movies.data.local.AppExecutors;
+import com.example.android.movies.data.remote.JsonUtils;
+import com.example.android.movies.data.local.LoadMovieViewModel;
+import com.example.android.movies.data.local.LoadMovieViewModelFactory;
+import com.example.android.movies.data.remote.NetworkUtils;
+import com.example.android.movies.ui.TrailersAdapter;
+import com.example.android.movies.ui.ReviewsAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
@@ -272,7 +272,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
         ButterKnife.bind(this);
         Log.e(TAG, "onCreate: 1 " + isDatabaseMember);
         if (savedInstanceState != null && savedInstanceState.containsKey(MOVIE_DATA)) {
-            mMovie = (Movie) savedInstanceState.getParcelable(MOVIE_DATA);
+            mMovie = savedInstanceState.getParcelable(MOVIE_DATA);
         }
 
         if (isDatabaseMember) {
@@ -382,7 +382,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailersA
         LinearLayoutManager reviewLayoutManager = new LinearLayoutManager(this);
         mReviewsRecyclerView.setHasFixedSize(true);
         mReviewsRecyclerView.setLayoutManager(reviewLayoutManager);
-        mReviewsAdapter = new ReviewsAdapter(this);
+        mReviewsAdapter = new ReviewsAdapter();
         mReviewsRecyclerView.setAdapter(mReviewsAdapter);
 
 

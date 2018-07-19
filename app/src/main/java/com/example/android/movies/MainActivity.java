@@ -6,7 +6,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,16 +24,14 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.android.movies.models.Movie;
-import com.example.android.movies.models.Movies;
+import com.example.android.movies.data.models.Movie;
+import com.example.android.movies.data.models.Movies;
 
-import com.example.android.movies.utilities.JsonUtils;
-import com.example.android.movies.utilities.MainViewModel;
-import com.example.android.movies.utilities.NetworkUtils;
+import com.example.android.movies.data.remote.JsonUtils;
+import com.example.android.movies.data.local.MainViewModel;
+import com.example.android.movies.data.remote.NetworkUtils;
+import com.example.android.movies.ui.MoviesAdapter;
 
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
@@ -96,8 +93,10 @@ public class MainActivity extends AppCompatActivity implements MoviesAdapter.Mov
                                 return null;
                             }
                             URL moviesRequestURL = NetworkUtils.buildUrl(API_KEY_VALUE, orderValue);
+                            Log.e(TAG, "loadInBackground: " + moviesRequestURL.toString());
                             try {
                                 String jsonMoviesData = NetworkUtils.getResponseFromHttpUrl(moviesRequestURL);
+                                Log.e(TAG, "loadInBackground: " + jsonMoviesData);
                                 return JsonUtils.parseMoviesDataFromJson(jsonMoviesData);
                             } catch (Exception e) {
                                 Log.e(TAG, e.getMessage(), e);

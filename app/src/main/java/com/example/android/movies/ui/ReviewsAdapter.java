@@ -9,15 +9,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.movies.R;
-import com.example.android.movies.models.Review;
+import com.example.android.movies.data.models.Review;
 
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsAdapterViewHolder> {
 
-    private Context mContext;
+
     private Review[] mReviewData;
 
-    public ReviewsAdapter(Context context) {
-        mContext = context;
+    public ReviewsAdapter() {
     }
 
     @NonNull
